@@ -1,39 +1,28 @@
 package com.nighthawk.spring_portfolio.sorters;
 
-import java.util.Random;
-
 public abstract class Sorter {
 
-    private static final Random random = new Random();
+    public abstract void sort(double[] array);
 
-    public abstract void sort(int[] array);
-
-    public long timeSorting(int[] array) {
+    public long timeSorting(double[] array) {
         long startTime = System.currentTimeMillis();
         sort(array);
         long endTime = System.currentTimeMillis();
         return endTime - startTime;
     }
 
-    public void benchmarkSort(int minSize, int maxSize, int stepSize, int runs) {
-        for (int size = minSize; size <= maxSize; size += stepSize) {
+    public void benchmarkSort(int minStudents, int maxStudents, int stepSize, int runs) {
+        for (int numStudents = minStudents; numStudents <= maxStudents; numStudents += stepSize) {
             long totalTime = 0;
 
             for (int run = 0; run < runs; run++) {
-                int[] data = generateRandomData(size);
-                totalTime += timeSorting(data);
+                double[][] xData = MockDataGenerator.generateXData(numStudents);
+                double[] yData = MockDataGenerator.generateYData(xData);
+                totalTime += timeSorting(yData);
             }
 
             double averageTime = totalTime / (double) runs;
-            System.out.println("Array Size: " + size + ", Average Time: " + averageTime + " ms");
+            System.out.println("Number of Students: " + numStudents + ", Average Time: " + averageTime + " ms");
         }
-    }
-
-    private int[] generateRandomData(int size) {
-        int[] data = new int[size];
-        for (int i = 0; i < size; i++) {
-            data[i] = random.nextInt(1000); // Random integer between 0 and 999
-        }
-        return data;
     }
 }

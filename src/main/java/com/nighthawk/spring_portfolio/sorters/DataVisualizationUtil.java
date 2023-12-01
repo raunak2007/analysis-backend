@@ -45,9 +45,9 @@ public class DataVisualizationUtil {
         dataset.addSeries(series);
 
         JFreeChart chart = ChartFactory.createScatterPlot(
-                "Grades vs " + metricName,
-                metricName,
-                "Grades",
+                "Time Taken (ns) vs Length of Data for " + metricName,
+                "Length of Data",
+                "Time Taken (ns)",
                 dataset,
                 PlotOrientation.VERTICAL,
                 true,

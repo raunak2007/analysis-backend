@@ -1,86 +1,58 @@
-package com.nighthawk.spring_portfolio.fibo;
-
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
-import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
+import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import javax.swing.*;
-import java.awt.*;
 
 public class FibonacciVisualizationWithGraph {
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Fibonacci Algorithm Efficiency Visualization");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setLayout(new BorderLayout());
+    // chart requests from frontend
+    private static String handleChartRequest(Request request, Response response) {
+        // get user input
+        int numTerms = Integer.parseInt(request.queryParams("numTerms"));
 
-            // Create chart panel
-            JPanel chartPanel = new JPanel();
-            frame.add(chartPanel, BorderLayout.CENTER);
+        // Create instances of Fibonacci algorithms
+        FibonacciAlgorithm recursiveFibonacci = new RecursiveFibonacci();
+        FibonacciAlgorithm iterativeFibonacci = new IterativeFibonacci();
+        FibonacciAlgorithm memoizationFibonacci = new MemoizationFibonacci();
 
-            int numTerms = getUserInput(); // add JS API call
+        // Visualize algorithm efficiency and generate series for each algorithm
+        XYSeries seriesRecursive = visualizeAlgorithmEfficiency(recursiveFibonacci, numTerms);
+        XYSeries seriesIterative = visualizeAlgorithmEfficiency(iterativeFibonacci, numTerms);
+        XYSeries seriesMemoization = visualizeAlgorithmEfficiency(memoizationFibonacci, numTerms);
 
-            FibonacciAlgorithm recursiveFibonacci = new RecursiveFibonacci();
-            FibonacciAlgorithm iterativeFibonacci = new IterativeFibonacci();
-            FibonacciAlgorithm memoizationFibonacci = new MemoizationFibonacci();
+        // Create dataset for JFreeChart
+        XYSeriesCollection dataset = new XYSeriesCollection();
+        dataset.addSeries(seriesRecursive);
+        dataset.addSeries(seriesIterative);
+        dataset.addSeries(seriesMemoization);
 
-            XYSeries seriesRecursive = visualizeAlgorithmEfficiency(recursiveFibonacci, numTerms);
-            XYSeries seriesIterative = visualizeAlgorithmEfficiency(iterativeFibonacci, numTerms);
-            XYSeries seriesMemoization = visualizeAlgorithmEfficiency(memoizationFibonacci, numTerms);
+        // Create JFreeChart
+        JFreeChart chart = ChartFactory.createXYLineChart(
+                "Fibonacci Algorithm Efficiency",
+                "Number of Terms",
+                "Time (nanoseconds)",
+                dataset,
+                PlotOrientation.VERTICAL,
+                true,
+                true,
+                false
+        );
 
-            XYSeriesCollection dataset = new XYSeriesCollection();
-            dataset.addSeries(seriesRecursive);
-            dataset.addSeries(seriesIterative);
-            dataset.addSeries(seriesMemoization);
+        // Generate chart image bytes
+        byte[] chartImageBytes = generateChartImageBytes(chart);
 
-            JFreeChart chart = ChartFactory.createXYLineChart(
-                    "Fibonacci Algorithm Efficiency",
-                    "Number of Terms",
-                    "Time (nanoseconds)",
-                    dataset,
-                    PlotOrientation.VERTICAL,
-                    true,
-                    true,
-                    false
-            );
-
-            ChartPanel chartPanelComponent = new ChartPanel(chart);
-            chartPanelComponent.setPreferredSize(new Dimension(800, 600));
-
-            chartPanel.removeAll();
-            chartPanel.add(chartPanelComponent);
-
-            frame.setSize(800, 600);
-            frame.setLocationRelativeTo(null);
-            frame.setVisible(true);
-            
-            byte[] chartImageBytes = generateChartImageBytes(chart);
-
-            // Send chartImageBytes to the frontend (e.g., using a web framework)
-
-            // Optionally, save the chart as an image file
-            saveChartAsImage(chart, "chart.png");
-        });
+        // Set response content type and return the chart image bytes
+        response.type("image/png");
+        return new String(chartImageBytes);
     }
 
-    private static int getUserInput() {
-        // Simulating the JS API call for user input
-        String userInput = JOptionPane.showInputDialog("Enter the number of terms in the Fibonacci sequence:");
-        try {
-            return Integer.parseInt(userInput);
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Invalid input. Using default value.");
-            return 10; // Default value
-        }
-    }
-
+    // Helper method to visualize the efficiency of a Fibonacci algorithm and generate a series
     private static XYSeries visualizeAlgorithmEfficiency(FibonacciAlgorithm algorithm, int numTerms) {
         XYSeries series = new XYSeries(algorithm.getClass().getSimpleName());
 
@@ -96,6 +68,7 @@ public class FibonacciVisualizationWithGraph {
         return series;
     }
 
+    // Helper method to generate chart image bytes from JFreeChart
     private static byte[] generateChartImageBytes(JFreeChart chart) {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -107,17 +80,12 @@ public class FibonacciVisualizationWithGraph {
         }
     }
 
-    private static void saveChartAsImage(JFreeChart chart, String filename) {
-        try {
-            ChartUtilities.saveChartAsPNG(new java.io.File(filename), chart, 800, 600);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
+    // Fibonacci algorithm that can be abstract, extended after 
     interface FibonacciAlgorithm {
         long calculateFibonacci(int n);
     }
+
+    // recursive Fibonacci algorithm
     static class RecursiveFibonacci implements FibonacciAlgorithm {
         @Override
         public long calculateFibonacci(int n) {
@@ -128,6 +96,7 @@ public class FibonacciVisualizationWithGraph {
         }
     }
 
+    // iterative Fibonacci algorithm
     static class IterativeFibonacci implements FibonacciAlgorithm {
         @Override
         public long calculateFibonacci(int n) {
@@ -144,6 +113,7 @@ public class FibonacciVisualizationWithGraph {
         }
     }
 
+    // memoization Fibonacci algorithm
     static class MemoizationFibonacci implements FibonacciAlgorithm {
         private long[] memo = new long[100]; // Adjust the size based on your needs
 

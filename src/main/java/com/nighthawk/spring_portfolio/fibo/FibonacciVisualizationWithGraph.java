@@ -89,3 +89,45 @@ public class FibonacciVisualizationWithGraph {
     interface FibonacciAlgorithm {
         long calculateFibonacci(int n);
     }
+    static class RecursiveFibonacci implements FibonacciAlgorithm {
+        @Override
+        public long calculateFibonacci(int n) {
+            if (n <= 1) {
+                return n;
+            }
+            return calculateFibonacci(n - 1) + calculateFibonacci(n - 2);
+        }
+    }
+
+    static class IterativeFibonacci implements FibonacciAlgorithm {
+        @Override
+        public long calculateFibonacci(int n) {
+            if (n <= 1) {
+                return n;
+            }
+            long a = 0, b = 1;
+            for (int i = 2; i <= n; i++) {
+                long temp = a + b;
+                a = b;
+                b = temp;
+            }
+            return b;
+        }
+    }
+
+    static class MemoizationFibonacci implements FibonacciAlgorithm {
+        private long[] memo = new long[100]; // Adjust the size based on your needs
+
+        @Override
+        public long calculateFibonacci(int n) {
+            if (n <= 1) {
+                return n;
+            }
+            if (memo[n] != 0) {
+                return memo[n];
+            }
+            memo[n] = calculateFibonacci(n - 1) + calculateFibonacci(n - 2);
+            return memo[n];
+        }
+    }
+}

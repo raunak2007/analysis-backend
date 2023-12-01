@@ -5,11 +5,12 @@ public abstract class Sorter {
     public abstract void sort(double[] array);
 
     public long timeSorting(double[] array) {
-        long startTime = System.currentTimeMillis();
+        long startTime = System.nanoTime();
         sort(array);
-        long endTime = System.currentTimeMillis();
-        return endTime - startTime;
+        long endTime = System.nanoTime();
+        return (endTime - startTime) / 1000000; // Convert nanoseconds to milliseconds
     }
+    
 
     public void benchmarkSort(int minStudents, int maxStudents, int stepSize, int runs) {
         for (int numStudents = minStudents; numStudents <= maxStudents; numStudents += stepSize) {

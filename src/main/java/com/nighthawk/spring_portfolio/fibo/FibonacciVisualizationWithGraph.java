@@ -12,7 +12,6 @@ import java.awt.*;
 
 import java.util.Scanner;
 
-
 public class FibonacciVisualizationWithGraph {
 
     public static void main(String[] args) {
@@ -79,13 +78,14 @@ public class FibonacciVisualizationWithGraph {
         return chartPanel;
     }
 
+    // Helper method to get user input for the number of terms in the Fibonacci sequence
     private static int getUserInput() {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter the number of terms in the Fibonacci sequence: ");
         return scanner.nextInt();
     }
 
-
+    // Helper method to generate mock data for Fibonacci sequence
     private static MockData generateFibonacciMockData(int numTerms) {
         double[][] xData = new double[numTerms][4];
         double[] yData = new double[numTerms];
@@ -104,7 +104,7 @@ public class FibonacciVisualizationWithGraph {
         return new MockData(xData, yData);
     }
 
-
+    // Recursive Fibonacci method
     private static int fibonacci(int n) {
         if (n <= 1) {
             return 1;
@@ -112,6 +112,7 @@ public class FibonacciVisualizationWithGraph {
         return fibonacci(n - 1) + fibonacci(n - 2);
     }
 
+    // Helper method to visualize the efficiency of a Fibonacci algorithm
     private static XYSeries visualizeAlgorithmEfficiency(FibonacciAlgorithm algorithm, MockData mockData) {
         XYSeries series = new XYSeries(algorithm.getClass().getSimpleName());
 
@@ -127,12 +128,12 @@ public class FibonacciVisualizationWithGraph {
         return series;
     }
 
-    
+    // Abstract class representing a generic Fibonacci algorithm
     abstract static class FibonacciAlgorithm {
         abstract long calculateFibonacci(int n);
     }
 
-   
+    // Concrete class representing a recursive Fibonacci algorithm
     static class RecursiveFibonacci extends FibonacciAlgorithm {
         @Override
         long calculateFibonacci(int n) {
@@ -143,7 +144,7 @@ public class FibonacciVisualizationWithGraph {
         }
     }
 
-    
+    // Concrete class representing an iterative Fibonacci algorithm
     static class IterativeFibonacci extends FibonacciAlgorithm {
         @Override
         long calculateFibonacci(int n) {

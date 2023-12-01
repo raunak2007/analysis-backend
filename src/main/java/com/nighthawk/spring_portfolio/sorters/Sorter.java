@@ -8,11 +8,14 @@ public abstract class Sorter {
         long startTime = System.nanoTime();
         sort(array);
         long endTime = System.nanoTime();
-        return (endTime - startTime) / 1000000; // Convert nanoseconds to milliseconds
+        return (endTime - startTime); // Convert nanoseconds to milliseconds
     }
     
 
-    public void benchmarkSort(int minStudents, int maxStudents, int stepSize, int runs) {
+    public double[][] benchmarkSort(int minStudents, int maxStudents, int stepSize, int runs) {
+        double[][] results = new double[(maxStudents - minStudents) / stepSize + 1][2];
+        int resultIndex = 0;
+
         for (int numStudents = minStudents; numStudents <= maxStudents; numStudents += stepSize) {
             long totalTime = 0;
 
@@ -23,7 +26,11 @@ public abstract class Sorter {
             }
 
             double averageTime = totalTime / (double) runs;
-            System.out.println("Number of Students: " + numStudents + ", Average Time: " + averageTime + " ms");
+            results[resultIndex][0] = numStudents;
+            results[resultIndex][1] = averageTime;
+            resultIndex++;
         }
+
+        return results;
     }
 }

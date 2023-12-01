@@ -27,7 +27,7 @@ public class BinarySorter extends Sorter {
     public class Main {
         public static void main(String[] args) {
             Sorter sorter = new BinarySorter();
-            sorter.benchmarkSort(10, 200, 10, 100);
+            sorter.benchmarkSort(1000, 10000, 1000, 100);
         }
     }
     

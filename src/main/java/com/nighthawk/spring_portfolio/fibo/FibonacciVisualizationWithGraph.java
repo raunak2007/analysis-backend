@@ -22,7 +22,7 @@ public class FibonacciVisualizationWithGraph {
             JPanel chartPanel = new JPanel();
             frame.add(chartPanel, BorderLayout.CENTER);
 
-            int numTerms = getUserInput(); // Replace with JS API call for user input
+            int numTerms = getUserInput(); // add JS API call
 
             FibonacciAlgorithm recursiveFibonacci = new RecursiveFibonacci();
             FibonacciAlgorithm iterativeFibonacci = new IterativeFibonacci();
@@ -60,4 +60,32 @@ public class FibonacciVisualizationWithGraph {
         });
     }
 
-    
+    private static int getUserInput() {
+        // Simulating the JS API call for user input
+        String userInput = JOptionPane.showInputDialog("Enter the number of terms in the Fibonacci sequence:");
+        try {
+            return Integer.parseInt(userInput);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Invalid input. Using default value.");
+            return 10; // Default value
+        }
+    }
+
+    private static XYSeries visualizeAlgorithmEfficiency(FibonacciAlgorithm algorithm, int numTerms) {
+        XYSeries series = new XYSeries(algorithm.getClass().getSimpleName());
+
+        for (int i = 1; i <= numTerms; i++) {
+            long startTime = System.nanoTime();
+            algorithm.calculateFibonacci(i);
+            long endTime = System.nanoTime();
+
+            long elapsedTime = endTime - startTime;
+            series.add(i, elapsedTime);
+        }
+
+        return series;
+    }
+
+    interface FibonacciAlgorithm {
+        long calculateFibonacci(int n);
+    }

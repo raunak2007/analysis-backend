@@ -23,8 +23,19 @@ public class BubbleSorter extends Sorter {
         }
     }
 
-    public static void main(String[] args) {
-        Sorter sorter = new BubbleSorter();
-        sorter.benchmarkSort(10, 200, 10, 100);
+    public class Main {
+        public static void main(String[] args) {
+            Sorter sorter = new BubbleSorter();
+            double[][] benchmarkResults = sorter.benchmarkSort(1000, 10000, 100, 100);
+    
+            double[] xData = new double[benchmarkResults.length];
+            double[] yData = new double[benchmarkResults.length];
+            for (int i = 0; i < benchmarkResults.length; i++) {
+                xData[i] = benchmarkResults[i][0];
+                yData[i] = benchmarkResults[i][1];
+            }
+    
+            DataVisualizationUtil.displayChart(xData, yData, "Bubble Sorter");
+        }
     }
 }

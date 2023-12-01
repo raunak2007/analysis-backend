@@ -1,12 +1,15 @@
 package com.nighthawk.spring_portfolio.fibo;
 
 import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import javax.swing.*;
 import java.awt.*;
 
@@ -57,6 +60,13 @@ public class FibonacciVisualizationWithGraph {
             frame.setSize(800, 600);
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
+            
+            byte[] chartImageBytes = generateChartImageBytes(chart);
+
+            // Send chartImageBytes to the frontend (e.g., using a web framework)
+
+            // Optionally, save the chart as an image file
+            saveChartAsImage(chart, "chart.png");
         });
     }
 
@@ -84,6 +94,25 @@ public class FibonacciVisualizationWithGraph {
         }
 
         return series;
+    }
+
+    private static byte[] generateChartImageBytes(JFreeChart chart) {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ChartUtilities.writeChartAsPNG(baos, chart, 800, 600);
+            return baos.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new byte[0];
+        }
+    }
+
+    private static void saveChartAsImage(JFreeChart chart, String filename) {
+        try {
+            ChartUtilities.saveChartAsPNG(new java.io.File(filename), chart, 800, 600);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     interface FibonacciAlgorithm {

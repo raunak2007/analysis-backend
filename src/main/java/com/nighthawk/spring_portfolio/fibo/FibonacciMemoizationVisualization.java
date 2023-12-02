@@ -34,5 +34,21 @@ public class FibonacciMemoizationVisualization {
         // testing fixed value of 10
         return 10;
     }
+    
+    private static int fibonacciMemoization(int n) {
+        if (n <= 1) {
+            return n;
+        }
+
+        if (memo.containsKey(n)) {
+            return memo.get(n);
+        }
+
+        int fib = fibonacciMemoization(n - 1) + fibonacciMemoization(n - 2);
+        memo.put(n, fib);
+
+        return fib;
+    }
+}
 
     

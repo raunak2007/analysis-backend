@@ -1,76 +1,40 @@
 package com.nighthawk.spring_portfolio.fibo;
 
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
+public class FibonacciRecursiveVisualization {
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
+    public static void main(String[] args) {
+        // Get user input for the number of terms
+        int n = getUserInput();
 
-public class FiboVisualizationUtil {
+        // Generate Fibonacci terms using recursive algorithm and measure time
+        double[][] xData = new double[n][1];
+        double[] yData = new double[n];
 
-    public static JFreeChart createXYLineChart(double[][] xData, double[] yData, String xAxisLabel, String yAxisLabel, String title) {
-        XYSeries series = new XYSeries(title);
-        for (int i = 0; i < xData.length; i++) {
-            series.add(xData[i][0], yData[i]);
+        for (int i = 1; i <= n; i++) {
+            long startTime = System.nanoTime();
+            int fibonacciTerm = fibonacciRecursive(i);
+            long endTime = System.nanoTime();
+            long timeTaken = endTime - startTime;
+
+            // Store data for visualization
+            xData[i - 1][0] = i;
+            yData[i - 1] = timeTaken;
         }
 
-        XYSeriesCollection dataset = new XYSeriesCollection();
-        dataset.addSeries(series);
-
-        return ChartFactory.createXYLineChart(
-            title,
-            xAxisLabel,
-            yAxisLabel,
-            dataset,
-            PlotOrientation.VERTICAL,
-            true,
-            true,
-            false
-        );
+        // Create and display the chart
+        FiboVisualizationUtil.displayChart(xData, yData, "Fibonacci Recursive");
     }
 
-    public static void displayChart(double[] xData, double[] yData, String metricName) {
-        XYSeries series = new XYSeries("Data Points");
-
-        for (int i = 0; i < xData.length; i++) {
-            series.add(xData[i], yData[i]);
-        }
-
-        XYSeriesCollection dataset = new XYSeriesCollection();
-        dataset.addSeries(series);
-
-        JFreeChart chart = ChartFactory.createScatterPlot(
-                "Time Taken (ns) vs Length of Data for " + metricName,
-                "Length of Data",
-                "Time Taken (ns)",
-                dataset,
-                PlotOrientation.VERTICAL,
-                true,
-                true,
-                false
-        );
-
-        XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
-        renderer.setSeriesLinesVisible(0, false);
-        renderer.setSeriesShapesVisible(0, true);
-
-        chart.getXYPlot().setRenderer(renderer);
-
-        saveChartAsImage(chart, metricName);
+    private static int getUserInput() {
+        // testing fixed value of 10
+        return 10;
     }
 
-    private static void saveChartAsImage(JFreeChart chart, String metricName) {
-        try {
-            BufferedImage chartImage = chart.createBufferedImage(800, 600);
-            ImageIO.write(chartImage, "png", new java.io.File("src/main/resources/static/images/" + metricName + ".png"));
-            System.out.println("Chart saved as " + metricName + ".png");
-        } catch (IOException e) {
-            System.err.println("Problem occurred creating chart.");
+    private static int fibonacciRecursive(int n) {
+        if (n <= 1) {
+            return n;
+        } else {
+            return fibonacciRecursive(n - 1) + fibonacciRecursive(n - 2);
         }
     }
 }

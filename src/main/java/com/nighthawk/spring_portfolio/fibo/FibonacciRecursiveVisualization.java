@@ -1,47 +1,40 @@
 package com.nighthawk.spring_portfolio.fibo;
 
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.ui.ApplicationFrame;
-import org.jfree.ui.RefineryUtilities;
+public class FibonacciRecursiveVisualization {
 
-import javax.swing.*;
+    public static void main(String[] args) {
+        // Get user input for the number of terms
+        int n = getUserInput();
 
-public class FiboVisualizationUtil extends ApplicationFrame {
+        // Generate Fibonacci terms using recursive algorithm and measure time
+        double[] xData = new double[n];
+        double[] yData = new double[n];
 
-    public FiboVisualizationUtil(String title, double[] xData, double[] yData) {
-        super(title);
+        for (int i = 1; i <= n; i++) {
+            long startTime = System.nanoTime();
+            int fibonacciTerm = fibonacciRecursive(i);
+            long endTime = System.nanoTime();
+            long timeTaken = endTime - startTime;
 
-        JFreeChart lineChart = ChartFactory.createXYLineChart(
-                title,
-                "Number of Terms",
-                "Time Taken (ns)",
-                createDataset(xData, yData)
-        );
-
-        ChartPanel chartPanel = new ChartPanel(lineChart);
-        chartPanel.setPreferredSize(new java.awt.Dimension(560, 370));
-        setContentPane(chartPanel);
-    }
-
-    private XYDataset createDataset(double[] xData, double[] yData) {
-        XYSeries series = new XYSeries("Fibonacci Time");
-        for (int i = 0; i < xData.length; i++) {
-            series.add(xData[i], yData[i]);
+            // Store data for visualization
+            xData[i - 1] = i;
+            yData[i - 1] = timeTaken;
         }
 
-        XYDataset dataset = new XYSeriesCollection(series);
-        return dataset;
+        // Create and display the chart
+        FiboVisualizationUtil.displayChart(xData, yData, "Fibonacci Recursive");
     }
 
-    public static void displayChart(double[] xData, double[] yData, String title) {
-        SwingUtilities.invokeLater(() -> {
-            FiboVisualizationUtil example = new FiboVisualizationUtil(title, xData, yData);
-            example.setSize(800, 400);
-            example.setLocationRelativeTo(null);
-            example.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            example.setVisible(true);
-        });
+    private static int getUserInput() {
+        // testing fixed value of 10
+        return 10;
+    }
+
+    private static int fibonacciRecursive(int n) {
+        if (n <= 1) {
+            return n;
+        } else {
+            return fibonacciRecursive(n - 1) + fibonacciRecursive(n - 2);
+        }
     }
 }

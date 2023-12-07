@@ -38,7 +38,7 @@ public class FibonacciIterativeVisualization {
         int fib = 1;
         int prev = 1;
 
-        for (int i = 2; i <= n; i++) {
+        for (int i = 2; i < n; i++) {
             int temp = fib;
             fib += prev;
             prev = temp;

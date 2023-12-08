@@ -27,7 +27,7 @@ public class FibonacciRecursiveVisualization {
 
     private static int getUserInput() {
         // testing fixed value of 10
-        return 10;
+        return 100;
     }
 
     private static int fibonacciRecursive(int n) {

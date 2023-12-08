@@ -27,7 +27,7 @@ public class FibonacciIterativeVisualization {
 
     private static int getUserInput() {
         // testing fixed value of 10
-        return 10;
+        return 100;
     }
 
     private static int fibonacciIterative(int n) {

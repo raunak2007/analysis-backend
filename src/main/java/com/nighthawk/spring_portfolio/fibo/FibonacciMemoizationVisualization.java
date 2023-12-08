@@ -53,7 +53,7 @@ public class FibonacciMemoizationVisualization {
         }
 
         // Default value if fetching fails
-        return 10;
+        return 100;
     }
 
     private static int fibonacciMemoization(int n) {

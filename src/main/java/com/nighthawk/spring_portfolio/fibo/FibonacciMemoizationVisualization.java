@@ -1,18 +1,15 @@
 package com.nighthawk.spring_portfolio.fibo;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 public class FibonacciMemoizationVisualization {
 
     private static Map<Integer, Integer> memo = new HashMap<>();
 
     public static void main(String[] args) {
-        // Get user input for the number of terms from the website
-        int n = fetchNFromWebsite();
+        // Get user input for the number of terms
+        int n = getUserInput();
 
         // Generate Fibonacci terms using memoization algorithm and measure time
         double[] xData = new double[n];
@@ -33,29 +30,11 @@ public class FibonacciMemoizationVisualization {
         FiboVisualizationUtil.displayChart(xData, yData, "Fibonacci Memoization");
     }
 
-    private static int fetchNFromWebsite() {
-        try {
-            // Replace the URL with the actual URL of the website providing the value of n
-            URL url = new URL("https://raunak2007.github.io");
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-            // Set up the connection
-            connection.setRequestMethod("GET");
-
-            // Read the response
-            Scanner scanner = new Scanner(connection.getInputStream());
-            if (scanner.hasNext()) {
-                String nValue = scanner.next();
-                return Integer.parseInt(nValue);
-            }
-        } catch (Exception e) {
-            e.printStackTrace(); // Handle exceptions appropriately in your actual code
-        }
-
-        // Default value if fetching fails
-        return 100;
+    private static int getUserInput() {
+        // testing fixed value of 10
+        return 10;
     }
-
+    
     private static int fibonacciMemoization(int n) {
         if (n <= 1) {
             return n;
@@ -71,3 +50,5 @@ public class FibonacciMemoizationVisualization {
         return fib;
     }
 }
+
+    

@@ -36,7 +36,7 @@ public class FibonacciMemoizationVisualization {
     private static int fetchNFromWebsite() {
         try {
             // Replace the URL with the actual URL of the website providing the value of n
-            URL url = new URL("https://raunak2007.github.io");
+            URL url = new URL("https://vardaansinha.github.io/miniprojectfrontend/memoization.html");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
             // Set up the connection

@@ -36,4 +36,16 @@ public class CSVUtil {
         }
         return data.toArray(new double[0][]);
     }
+
+    public static double[][] readBenchmarkData(String xFilePath, String yFilePath) {
+        double[][] xData = readDataFromCSV(xFilePath);
+        double[][] yData = readDataFromCSV(yFilePath);
+
+        double[][] combinedData = new double[xData.length][2];
+        for (int i = 0; i < xData.length; i++) {
+            combinedData[i][0] = xData[i][0]; // Assuming the first column of xData is what you need
+            combinedData[i][1] = yData[i][0]; // Assuming yData is a single column array
+        }
+        return combinedData;
+    }
 }

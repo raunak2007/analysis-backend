@@ -9,6 +9,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 public class DataVisualizationUtil {
@@ -64,13 +65,48 @@ public class DataVisualizationUtil {
         saveChartAsImage(chart, metricName);
     }
 
-    private static void saveChartAsImage(JFreeChart chart, String metricName) {
+    public static void displayChartWithUserPoint(double[][] benchmarkData, int userArrayLength, double userTime, String sortingMethod) {
+        XYSeries series = new XYSeries("Benchmark Data");
+        for (double[] dataPoint : benchmarkData) {
+            series.add(dataPoint[0], dataPoint[1]);
+        }
+
+        XYSeries userSeries = new XYSeries("User Data");
+        userSeries.add(userArrayLength, userTime);
+
+        XYSeriesCollection dataset = new XYSeriesCollection();
+        dataset.addSeries(series);
+        dataset.addSeries(userSeries);
+
+        JFreeChart chart = ChartFactory.createScatterPlot(
+            "Performance Comparison",
+            "Array Length",
+            "Time (ns)",
+            dataset,
+            PlotOrientation.VERTICAL,
+            true,
+            true,
+            false
+        );
+
+        XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+        renderer.setSeriesLinesVisible(0, false);
+        renderer.setSeriesShapesVisible(0, true);
+        renderer.setSeriesLinesVisible(1, false);
+        renderer.setSeriesShapesVisible(1, true);
+        chart.getXYPlot().setRenderer(renderer);
+
+        saveChartAsImage(chart, sortingMethod + "_user");
+    }
+
+    private static void saveChartAsImage(JFreeChart chart, String fileName) {
         try {
-            BufferedImage chartImage = chart.createBufferedImage(800, 600);
-            ImageIO.write(chartImage, "png", new java.io.File("src/main/resources/static/images/" + metricName + ".png"));
-            System.out.println("Chart saved as " + metricName + ".png");
+            File imageFile = new File("src/main/resources/static/images/" + fileName + ".png");
+            ImageIO.write(chart.createBufferedImage(800, 600), "png", imageFile);
+            System.out.println("Chart saved as " + fileName + ".png");
         } catch (IOException e) {
             System.err.println("Problem occurred creating chart.");
+            e.printStackTrace();
         }
     }
 }

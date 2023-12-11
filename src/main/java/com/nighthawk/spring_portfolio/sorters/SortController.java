@@ -1,48 +1,100 @@
 package com.nighthawk.spring_portfolio.sorters;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.http.ResponseEntity;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@CrossOrigin
 @RestController
-@RequestMapping("/sort")
+@RequestMapping("/api/sort")
 public class SortController {
 
-    @PostMapping("/benchmark")
-    public ResponseEntity<?> benchmarkSort(@RequestParam int length, @RequestParam String method) {
-        Sorter sorter;
-        switch (method.toLowerCase()) {
-            case "binary":
-                sorter = new BinarySorter();
-                break;
-            case "bubble":
-                sorter = new BubbleSorter();
-                break;
-            case "merge":
-                sorter = new MergeSorter();
-                break;
-            default:
-                return ResponseEntity.badRequest().body("Invalid sorting method");
-        }
+    @PostMapping("/perform")
+    public ResponseEntity<Map<String, Object>> performSorting(@RequestBody SortingRequest request) {
+        String sorterType = request.getSorterType();
+        int arraySize = request.getArraySize();
 
-        // Generate data and benchmark
-        double[][] xData = MockDataGenerator.generateXData(length);
+        // Warm up the JVM
+        warmUpJVM(sorterType, arraySize);
+
+        // Generate xData and yData
+        double[][] xData = MockDataGenerator.generateXData(arraySize);
         double[] yData = MockDataGenerator.generateYData(xData);
-        long time = sorter.timeSorting(yData);
 
-        // Save the benchmark result for future use
-        // TODO: Implement a mechanism to store benchmark results
+        // Perform sorting
+        Sorter sorter = getSorter(sorterType);
+        long startTime = System.nanoTime();
+        sorter.sort(yData);
+        long endTime = System.nanoTime();
 
-        // Return the benchmark result
-        return ResponseEntity.ok(new BenchmarkResult(length, time));
+        // Calculate time taken
+        double timeTaken = (endTime - startTime);
+
+        // Read benchmark data
+        String xCsvFilePath = "src/main/java/com/nighthawk/spring_portfolio/sorters/benchmark_data/" + sorterType + "XData.csv";
+        String yCsvFilePath = "src/main/java/com/nighthawk/spring_portfolio/sorters/benchmark_data/" + sorterType + "YData.csv";
+        double[][] benchmarkData = CSVUtil.readBenchmarkData(xCsvFilePath, yCsvFilePath);
+
+        // Visualize data and save chart
+        String chartFileName = sorterType + "_sorter_performance_user";
+        DataVisualizationUtil.displayChartWithUserPoint(benchmarkData, arraySize, timeTaken, chartFileName);
+
+        // Construct the response
+        Map<String, Object> response = new HashMap<>();
+        response.put("timeTakenNs", timeTaken);
+        response.put("sorterType", sorterType);
+        response.put("arraySize", arraySize);
+        response.put("chartImageUrl", "/images/" + chartFileName + ".png");
+
+        return ResponseEntity.ok(response);
     }
 
-    // Inner class to structure the response
-    static class BenchmarkResult {
-        public int length;
-        public long time;
+    // Include warmUpJVM and getSorter methods here...
 
-        public BenchmarkResult(int length, long time) {
-            this.length = length;
-            this.time = time;
+    private void warmUpJVM(String sorterType, int length) {
+        for (int i = 0; i < 20; i++) {
+            double[][] warmupXData = MockDataGenerator.generateXData(length);
+            double[] warmupYData = MockDataGenerator.generateYData(warmupXData);
+            Sorter sorter = getSorter(sorterType);
+            sorter.sort(warmupYData);
+        }
+    }
+
+    private Sorter getSorter(String sorterType) {
+        switch (sorterType) {
+            case "binary":
+                return new BinarySorter();
+            case "bubble":
+                return new BubbleSorter();
+            case "merge":
+                return new MergeSorter();
+            default:
+                throw new IllegalArgumentException("Invalid sorter type: " + sorterType);
+        }
+    }
+    
+
+    static class SortingRequest {
+        private String sorterType;
+        private int arraySize;
+
+        // Getters and Setters
+        public String getSorterType() {
+            return sorterType;
+        }
+
+        public void setSorterType(String sorterType) {
+            this.sorterType = sorterType;
+        }
+
+        public int getArraySize() {
+            return arraySize;
+        }
+
+        public void setArraySize(int arraySize) {
+            this.arraySize = arraySize;
         }
     }
 }

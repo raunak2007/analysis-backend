@@ -95,7 +95,7 @@ public class DataVisualizationUtil {
         renderer.setSeriesShapesVisible(1, true);
         chart.getXYPlot().setRenderer(renderer);
 
-        saveChartAsImage(chart, sortingMethod + "_user");
+        saveChartAsImage(chart, sortingMethod);
     }
 
     private static void saveChartAsImage(JFreeChart chart, String fileName) {

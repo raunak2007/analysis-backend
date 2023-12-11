@@ -34,6 +34,10 @@ public class BubbleSorter extends Sorter {
                 xData[i] = benchmarkResults[i][0];
                 yData[i] = benchmarkResults[i][1];
             }
+
+            String basePath = "src/main/java/com/nighthawk/spring_portfolio/sorters/benchmark_data/";
+            CSVUtil.saveDataToCSV(xData, basePath + "bubbleXData.csv");
+            CSVUtil.saveDataToCSV(yData, basePath + "bubbleYData.csv");
     
             DataVisualizationUtil.displayChart(xData, yData, "Bubble Sorter");
         }

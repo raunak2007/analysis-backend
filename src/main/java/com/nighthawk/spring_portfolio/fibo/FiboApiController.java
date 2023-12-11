@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/fibo")
 public class FiboApiController {
 
-    @Autowired
-
     @GetMapping("/iterative")
     public String getFibonacciIterative() {
         FibonacciIterativeVisualization.main(null);

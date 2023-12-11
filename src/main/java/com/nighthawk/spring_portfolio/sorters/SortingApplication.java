@@ -5,7 +5,10 @@ public class SortingApplication {
     public static void main(String[] args) {
         // Predefined sorter type and array size
         String sorterType = "merge"; // Replace with "Binary", "Bubble", or "Merge"
-        int arraySize = 4000; // Replace with desired array size
+        int arraySize = 1000; // Replace with desired array size
+        
+        //WARM UP TIME
+        warmUpJVM(sorterType, arraySize);
 
         // Generate xData using MockDataGenerator
         double[][] xData = MockDataGenerator.generateXData(arraySize);
@@ -30,6 +33,16 @@ public class SortingApplication {
 
         // Visualize data
         DataVisualizationUtil.displayChartWithUserPoint(benchmarkData, arraySize, timeTaken, sorterType + " Sorter Performance");
+    }
+
+    private static void warmUpJVM(String sorterType, int length) {
+        // Simple warm-up with small arrays
+        for (int i = 0; i < 20; i++) {
+            double[][] warmupXData = MockDataGenerator.generateXData(length); // Small data set
+            double[] warmupYData = MockDataGenerator.generateYData(warmupXData);
+            Sorter sorter = getSorter(sorterType);
+            sorter.sort(warmupYData);
+        }
     }
 
     private static Sorter getSorter(String sorterType) {

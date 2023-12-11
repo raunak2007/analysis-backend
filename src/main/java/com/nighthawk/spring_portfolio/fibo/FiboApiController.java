@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class FiboApiController {
 
     @Autowired
-    private FiboJpaRepository fiboJpaRepository;
 
     @GetMapping("/iterative")
     public String getFibonacciIterative() {

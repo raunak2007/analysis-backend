@@ -2,6 +2,10 @@ package com.nighthawk.spring_portfolio.sorters;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CSVUtil {
 
@@ -13,5 +17,23 @@ public class CSVUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static double[][] readDataFromCSV(String fileName) {
+        List<double[]> data = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(",");
+                double[] row = new double[values.length];
+                for (int i = 0; i < values.length; i++) {
+                    row[i] = Double.parseDouble(values[i]);
+                }
+                data.add(row);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return data.toArray(new double[0][]);
     }
 }

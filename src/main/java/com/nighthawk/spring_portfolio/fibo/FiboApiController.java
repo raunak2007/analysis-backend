@@ -44,24 +44,6 @@ public class FiboApiController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping("/visualize/iterative")
-    public ResponseEntity<String> visualizeIterative() {
-        // Call the visualization method
-        FibonacciIterativeVisualization.main(null);
-        return new ResponseEntity<>("Visualization completed: Fibonacci Iterative", HttpStatus.OK);
-    }
+    // Add visualization endpoints here
 
-    @PostMapping("/visualize/memoization")
-    public ResponseEntity<String> visualizeMemoization() {
-        // Call the visualization method
-        FibonacciMemoizationVisualization.main(null);
-        return new ResponseEntity<>("Visualization completed: Fibonacci Memoization", HttpStatus.OK);
-    }
-
-    @PostMapping("/visualize/recursive")
-    public ResponseEntity<String> visualizeRecursive() {
-        // Call the visualization method
-        FibonacciRecursiveVisualization.main(null);
-        return new ResponseEntity<>("Visualization completed: Fibonacci Recursive", HttpStatus.OK);
-    }
 }

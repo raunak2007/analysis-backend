@@ -30,20 +30,28 @@ public class FibonacciIterativeVisualization {
         return 100;
     }
 
+        // Iterative implementation of the Fibonacci sequence
     private static int fibonacciIterative(int n) {
+    // Base case: if n is 0 or 1, return n
         if (n <= 1) {
-            return n;
+        return n;
         }
 
+    // Initialize variables to store the current Fibonacci number (fib)
+    // and the previous Fibonacci number (prev)
         int fib = 1;
         int prev = 1;
 
+    // Loop from the third Fibonacci number up to the nth
         for (int i = 2; i < n; i++) {
+        // Update fib by adding the previous Fibonacci number
+        // Update prev to the previous value of fib
             int temp = fib;
             fib += prev;
             prev = temp;
-        }
-
-        return fib;
     }
+
+    // Return the nth Fibonacci number
+    return fib;
+}
 }

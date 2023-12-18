@@ -30,11 +30,15 @@ public class FibonacciRecursiveVisualization {
         return 100;
     }
 
-    private static int fibonacciRecursive(int n) {
-        if (n <= 1) {
-            return n;
-        } else {
-            return fibonacciRecursive(n - 1) + fibonacciRecursive(n - 2);
-        }
+    // Recursive implementation of the Fibonacci sequence
+private static int fibonacciRecursive(int n) {
+    // Base case: if n is 0 or 1, return n
+    if (n <= 1) {
+        return n;
+    } else {
+        // Recursive case: return the sum of the two previous Fibonacci numbers
+        return fibonacciRecursive(n - 1) + fibonacciRecursive(n - 2);
     }
 }
+}
+
